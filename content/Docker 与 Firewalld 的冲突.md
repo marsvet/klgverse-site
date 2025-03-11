@@ -18,7 +18,7 @@ docker 20.10.0 之后，docker 适配了一下 firewalld：创建一个叫 docke
 所以也就是说，假设重启了 firewalld，docker 的所有 iptables 规则丢失了，但几秒后，docker 又会自动将规则添回去。
 
 > [!example] 
-> firewalld 重启 → iptables 规则被清空 → 1~2s后 firewalld 规则生效 → 2~10s 内 docker 陆续自动重新生成 iptables 规则
+> firewalld 重启 → iptables 规则被清空 → `1~2s` 后 firewalld 规则生效 → `2~10s` 内 docker 陆续自动重新生成 iptables 规则
 
 所以也就是说，从 docker 20.10.0 以后，firewalld 重启基本不会对 docker 网络产生什么影响了，唯一的影响是导致容器网络几秒钟内不可用。
 
