@@ -64,7 +64,7 @@ poetry run dev
 
 可以看到功能不如 npm scripts 强大，npm scripts 可以定义任意命令比如：`node xxx.js`，而 poetry scripts 只能指定 python 模块中的某个函数。
 貌似原因是开发者觉得这超出了 Poetry 的职责，这个功能不应该由 Poetry 实现，具体看：[Improve script section: support use of script files · Issue #2310 · python-poetry/poetry · GitHub](https://github.com/python-poetry/poetry/issues/2310)
-PS：另一个包管理工具 pdm 实现了和 npm scripts 一样的功能。[[./Python 包和环境管理器调研|Python 包和环境管理器调研]]
+PS：另一个包管理工具 pdm 实现了和 npm scripts 一样的功能。[[./Python 包和环境管理工具调研|Python 包和环境管理工具调研]]
 
 典型使用场景：
 - **启动开发服务器**： 你可以通过 `poetry run serve` 启动一个开发服务器，而无需每次都输入复杂的 Python 启动命令。
