@@ -10,11 +10,11 @@ docker 的网络也是基于 iptables 的，比如容器端口映射到主机上
 2. docker 启动时会写入 iptables 规则，容器网络变更时也会修改 iptables 规则，但如果规则没了，docker 不会再自动重新加回去。
 
 根据这两个核心原因，可以想到两个解决方案：
-1. 根据核心原因一，firewalld 重启后会根据设置好的 firewalld 规则生成 iptables 规则，那是不是可以将 docker 需要的规则也配置成 firewalld 规则？不过这比较难实现，docker 的规则跟该机器上跑的容器的个数、网络有关，并不是静态的。比较简单的解决方案是，直接将 docker0 网卡加入 firewalld 的 trusted 这个 zone（网上看来的，没验证过）。
+1. 根据核心原因一，firewalld 重启后会根据设置好的 firewalld 规则生成 iptables 规则，那是不是可以将 docker 需要的规则也配置成 firewalld 规则？不过这比较难实现，docker 的规则跟该机器上跑的容器的个数、网络有关，并不是静态的。比较简单的解决方案是，直接将 docker0 加入 firewalld 的 trusted 这个 zone（网上看来的，没验证过）。
 2. 根据核心原因二，我们可以在 firewalld 重启后，再重启 docker，就没问题了，但这会导致所有容器全部停止或重启。
 
 以上是 docker 20.10.0 之前。
-docker 20.10.0 之后，docker 适配了一下 firewalld：创建一个叫 docker 的自定义 zone，并自动将 docker 相关的网卡全部加入这个 zone（比如 docker0，以及容器里的虚拟网卡等），然后 docker 会不断维护这个 zone，即使将某个网卡从 docker zone 中移除，几秒后又会被添加回去。
+docker 20.10.0 之后，docker 适配了一下 firewalld：创建一个叫 docker 的自定义 zone，并自动将 docker 相关的网桥全部加入这个 zone（比如 docker0，以及各种虚拟网桥 br-xxxxxxxx 等），然后 docker 会不断维护这个 zone，即使将某个网桥从 docker zone 中移除，几秒后又会被添加回去。
 所以也就是说，假设重启了 firewalld，docker 的所有 iptables 规则丢失了，但几秒后，docker 又会自动将规则添回去。
 
 > [!example] 
